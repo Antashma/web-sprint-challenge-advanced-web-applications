@@ -1,0 +1,11 @@
+# Explain what a token is used for.
+A token is used for authentication. It is grabbed from the server and can be stored in the user's local storage after they login into a site and it is used to grant them access to protected pages.
+
+# What steps can you take in your web apps to keep your data secure?
+We can take three steps: (1) Not storing sensitive data (username and password) in local storage or easily viewed code, (2) Store sensitive data in private servers, (3) Have users login to be able to acess prvate data.
+
+# Describe how web servers work.
+Web servers hold data that we can access with http methods.
+
+# Which HTTP methods can be mapped to the CRUD acronym that we use when interfacing with APIs/Servers.
+(C)reate is mapped to POST, (R)equest is mapped to GET, (U)pdate is mapped to PUT, and (D)elete is mapped to DELETE.
