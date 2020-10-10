@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import { useHistory } from "react-router-dom";
+import axios from 'axios';
 
 const inititialData = {
   username: '',
@@ -20,16 +21,22 @@ const Login = (props) => {
     console.log(login)
   }
 
-  const handleSubmit  = e => {
+  const handleSubmit  = (e, cred) => {
     e.preventDefault();
     /* uselogin function that add check login, adds token if good and sends user to bubblepage route */
+    axios.post('http://localhost:5000/api/login', cred)
+      .then(res => {
+        localStorage.setItem('token', res.data.payload)
+        push('/bubble-page')
+      })
+      .catch(err => console.log('unable to login:', err))
   }
 
   return (
     <>
       <h1>Welcome to the Bubble App!</h1>
       <p>Build a login page here</p>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => handleSubmit(e, login)}>
         <lable>Username:
             <input 
               type='text' 
