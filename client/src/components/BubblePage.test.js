@@ -5,9 +5,10 @@ import ColorList from "./ColorList";
 import {axiosWithAuth} from './api/axiosWithAuth';
 
 jest.mock( () => {
-axiosWithAuth().get('http://localhost:5000/api/colors')
-    .then(res => updateColors(res.data))
-    .catch(err => console.error('error fetching colors',err))
+  const [mockedData, setMockedData] = useState([])
+  axiosWithAuth().get('http://localhost:5000/api/colors')
+      .then(res => setMockedData(res.data))
+      .catch(err => console.error('error fetching colors',err))
 })
 
 const testColors = [
@@ -18,13 +19,13 @@ const testColors = [
 
 test("Fetches data and renders the bubbles", () => {
   // Finish this test
-/*   const {queryAllByTestId, rerender} = render(<BubblePage/>)
+ const {queryAllByTestId, rerender} = render(<BubblePage/>)
   render(<ColorList colors={testColors}/>)
   expect(queryAllByTestId('color-list-item')).toStrictEqual([])
   expect(queryAllByTestId('color-list-item')).toHaveLength(0)
 
   rerender(<BubblePage colorList={[testColors]} />)
   expect(queryAllByTestId('color-list-item')).toStrictEqual([])
-  expect(queryAllByTestId('color-list-item')).toHaveLength(3) */
+  expect(queryAllByTestId('color-list-item')).toHaveLength(3) 
   
 });

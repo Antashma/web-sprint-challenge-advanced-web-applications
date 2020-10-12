@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { axiosWithAuth } from "../api/axiosWithAuth";
+import { getColorData } from "../api/getColorData";
 
 const initialColor = {
   color: "",
@@ -18,7 +19,7 @@ const ColorList = ({ colors, updateColors }) => {
   };
 
   useEffect(() => {
-    axiosWithAuth().get('http://localhost:5000/api/colors')
+    getColorData()
     .then(res => updateColors(res.data))
     .catch(err => console.error('error fetching colors',err))
   }, [editing, deleting])
