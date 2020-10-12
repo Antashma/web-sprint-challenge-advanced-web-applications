@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { axiosWithAuth } from "../api/axiosWithAuth";
+import { getColorData } from "../api/getColorData";
 
 const initialColor = {
   color: "",
@@ -9,6 +10,7 @@ const initialColor = {
 const ColorList = ({ colors, updateColors }) => {
   console.log(colors);
   const [editing, setEditing] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
 
   const editColor = color => {
@@ -16,15 +18,36 @@ const ColorList = ({ colors, updateColors }) => {
     setColorToEdit(color);
   };
 
+  useEffect(() => {
+    getColorData()
+    .then(res => updateColors(res.data))
+    .catch(err => console.error('error fetching colors',err))
+  }, [editing, deleting])
+
   const saveEdit = e => {
     e.preventDefault();
     // Make a put request to save your updated color
     // think about where will you get the id from...
     // where is is saved right now?
+    axiosWithAuth()
+      .put(`http://localhost:5000/api/colors/${colorToEdit.id}`, colorToEdit)
+      .then(res => { 
+        console.log(`${colorToEdit.color} was changed!`, res );
+        setEditing(false);
+      })
+      .catch(err => console.error(`Could not update ${colorToEdit.color}:`, err))
   };
 
   const deleteColor = color => {
-    // make a delete request to delete this color
+    axiosWithAuth()
+      .delete(`http://localhost:5000/api/colors/${color.id}`)
+      .then(res => {
+        console.log('delete sucessful', res)
+        setDeleting(false)
+      })
+      .catch(err => console.log('delete failed: ', err))
+
+
   };
 
   return (
@@ -32,10 +55,11 @@ const ColorList = ({ colors, updateColors }) => {
       <p>colors</p>
       <ul>
         {colors.map(color => (
-          <li key={color.color} onClick={() => editColor(color)}>
+          <li data-testid='color-list-item' key={color.color} onClick={() => editColor(color)}>
             <span>
               <span className="delete" onClick={e => {
                     e.stopPropagation();
+                    setDeleting(true)
                     deleteColor(color)
                   }
                 }>
@@ -76,7 +100,7 @@ const ColorList = ({ colors, updateColors }) => {
           </label>
           <div className="button-row">
             <button type="submit">save</button>
-            <button onClick={() => setEditing(false)}>cancel</button>
+            <button onClick={(e) => {e.preventDefault();setEditing(false)}}>cancel</button>
           </div>
         </form>
       )}
